@@ -10,10 +10,15 @@ const LayerList: FC<LayerListProps> = (props) => {
   const [layerListItems, setLayerListItems] = useState<Array<any>>([]);
 
   useEffect(() => {
-    console.log('props:', props);
+    // console.log('props:', props);
     const temp: Array<any> = [];
     props.layers.items.forEach((layer: any) => {
-      temp.push(<p key = {layer.title}>{layer.title}</p>);
+      temp.push(
+        <div key = {layer.title} className = {styles.listItemDivs} onClick = {() => {layer.visible = !layer.visible}}>
+      <p >{layer.title}</p>
+        </div>
+
+      );
     });
     setLayerListItems(temp);
   }, []);

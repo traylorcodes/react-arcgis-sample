@@ -61,12 +61,12 @@ const [webmap /* , setWebmap */] = useState<WebMap>(new WebMap({
         reactiveUtils.when(() => layerListExpand.expanded, () => {
             setShowListPanel(true);
             setViewDivStyle(styles.smallViewDiv);
-            console.log('hi');
+            // console.log('hi');
           });
         reactiveUtils.when(() => !layerListExpand.expanded, () => {
           setShowListPanel(false);
           setViewDivStyle(styles.viewDiv);
-          console.log('bye');
+          // console.log('bye');
           });
 
 
