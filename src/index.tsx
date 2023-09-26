@@ -9,6 +9,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/css/main.css"></link>
     <App />
   </React.StrictMode>
 );
