@@ -1,12 +1,28 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './LayerList.module.scss';
 
-interface LayerListProps {}
+interface LayerListProps {
+  layers: any
+}
 
-const LayerList: FC<LayerListProps> = () => (
+const LayerList: FC<LayerListProps> = (props) => {
+
+  const [layerListItems, setLayerListItems] = useState<Array<any>>([]);
+
+  useEffect(() => {
+    console.log('props:', props);
+    const temp: Array<any> = [];
+    props.layers.items.forEach((layer: any) => {
+      temp.push(<p key = {layer.title}>{layer.title}</p>);
+    });
+    setLayerListItems(temp);
+  }, []);
+
+  return (
   <div className={styles.LayerList}>
-    LayerList Component
+    {layerListItems}
   </div>
-);
+  );
+};
 
 export default LayerList;

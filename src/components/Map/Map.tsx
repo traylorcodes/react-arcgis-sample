@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
+import LayerList from '../LayerList/LayerList';
 import styles from './Map.module.scss';
 import MapView from "@arcgis/core/views/MapView.js";
 import WebMap from "@arcgis/core/WebMap.js";
@@ -95,7 +96,12 @@ useEffect(() => {}, [webmapLoaded, showListPanel, viewDivStyle])
     <div className = {styles.container}>
     {/* <div ref = {mapEl} className = {styles.viewDiv}></div> */}
     <div ref = {mapEl} className = {viewDivStyle}></div>
-    {webmapLoaded && showListPanel && <div className = {styles.rightPanel}>hi</div>}
+    {webmapLoaded && showListPanel && 
+    <div className = {styles.rightPanel}>
+      <LayerList layers = {webmap.layers}></LayerList>
+    </div>
+    }
+    {/* {webmapLoaded && showListPanel && <div className = {styles.rightPanel}>hi</div>} */}
     </div>
   );
   }
