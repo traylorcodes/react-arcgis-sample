@@ -4,3 +4,18 @@
     height: 100vh;
     width: 100%;
 }
+
+.smallViewDiv {
+    width: 75%;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.rightPanel {
+    width: 25%;
+    height: 100vh;
+}
