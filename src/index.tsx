@@ -3,7 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+// set up calcite components
+import "@esri/calcite-components/dist/calcite/calcite.css";
+// import { setAssetPath } from '@esri/calcite-components/dist/components';
+// setAssetPath(window.location.href);
+import { setAssetPath } from "@esri/calcite-components/dist/components";
+setAssetPath("https://js.arcgis.com/calcite-components/1.8.0/assets");
+document.body.classList.toggle('calcite-mode-dark');
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

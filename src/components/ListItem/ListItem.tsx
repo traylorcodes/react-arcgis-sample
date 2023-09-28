@@ -1,12 +1,41 @@
-import React, { FC } from 'react';
+import React, { FC, useRef, useState, useEffect } from 'react';
 import styles from './ListItem.module.scss';
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
+import {
+  CalciteIcon,
+  CalciteLabel
+} from '@esri/calcite-components-react';
 
-interface ListItemProps {}
+interface ListItemProps {
+  layer: any
+}
 
-const ListItem: FC<ListItemProps> = () => (
-  <div className={styles.ListItem}>
-    ListItem Component
-  </div>
+const ListItem: FC<ListItemProps> = (props) => {
+  const hasWatchers = useRef<Boolean>(false);
+  const [icon, setIcon] = useState<'view-visible' | 'view-hide'>(
+    props.layer.visible ? 'view-visible' : 'view-hide'
+  );
+
+  useEffect(() => {
+    if (!hasWatchers.current) {
+      reactiveUtils.watch(() => props.layer.visible, (newValue) => {
+        if (newValue === true) {
+          setIcon('view-visible');
+          return;
+        }
+        setIcon('view-hide');
+      });
+      hasWatchers.current = true;
+    }
+    }, [])
+    
+    useEffect(() => {}, [icon]);
+
+return (
+  <CalciteLabel layout = 'inline'>
+    <CalciteIcon icon = {icon} onClick = {() => {props.layer.visible = !props.layer.visible}}></CalciteIcon>
+    {props.layer.title}
+  </CalciteLabel>
 );
-
+}
 export default ListItem;

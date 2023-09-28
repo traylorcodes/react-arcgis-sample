@@ -5,6 +5,12 @@ import MapView from "@arcgis/core/views/MapView.js";
 import WebMap from "@arcgis/core/WebMap.js";
 import Expand from "@arcgis/core/widgets/Expand.js";
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
+import "@esri/calcite-components/dist/components/calcite-shell";
+import "@esri/calcite-components/dist/components/calcite-shell-panel";
+import {
+  CalciteShellPanel,
+  CalciteShell,
+  } from '@esri/calcite-components-react';
 
 interface MapProps {}
 
@@ -61,48 +67,54 @@ const [webmap /* , setWebmap */] = useState<WebMap>(new WebMap({
         reactiveUtils.when(() => layerListExpand.expanded, () => {
             setShowListPanel(true);
             setViewDivStyle(styles.smallViewDiv);
-            // console.log('hi');
           });
         reactiveUtils.when(() => !layerListExpand.expanded, () => {
           setShowListPanel(false);
           setViewDivStyle(styles.viewDiv);
-          // console.log('bye');
           });
-
-
-
-
-          //   reactiveUtils.watch(() => layerListExpand.expanded, (newValue, oldValue) => {
-          //     if (newValue === true) {
-          //       setShowListPanel(true);
-          //       setViewDivStyle(styles.smallViewDiv);
-          //     }
-          //     setShowListPanel(false);
-          //     setViewDivStyle(styles.viewDiv);
-          //     console.log('hi');
-          //   });
-          //   // setHasWatchers(true);
-          // // }
-
-
           hasWatchers.current = true;
-        // setHasWatchers(true);
       }
   }, [hasWatchers])
 
 useEffect(() => {}, [webmapLoaded, showListPanel, viewDivStyle])
 
   return (
-    <div className = {styles.container}>
-    {/* <div ref = {mapEl} className = {styles.viewDiv}></div> */}
-    <div ref = {mapEl} className = {viewDivStyle}></div>
-    {webmapLoaded && showListPanel && 
-    <div className = {styles.rightPanel}>
-      <LayerList layers = {webmap.layers}></LayerList>
-    </div>
-    }
-    {/* {webmapLoaded && showListPanel && <div className = {styles.rightPanel}>hi</div>} */}
-    </div>
+    <CalciteShell>
+
+    
+    <CalciteShellPanel slot = "panel-end" collapsed = {!showListPanel}>
+      { 
+      webmapLoaded &&  <LayerList layers = {webmap.layers}></LayerList>
+      }
+    </CalciteShellPanel>
+
+    <div ref = {mapEl} className = {styles.viewDiv}></div>
+
+    </CalciteShell>
+
+
+
+    // <div className = {styles.container}>
+    // <div ref = {mapEl} className = {viewDivStyle}></div>
+    // {webmapLoaded && showListPanel && 
+    // <div className = {styles.rightPanel}>
+    //   <LayerList layers = {webmap.layers}></LayerList>
+    // </div>
+    // }
+    // </div>
+
+
+
+
+
+    // <div className = {styles.container}>
+    // <div ref = {mapEl} className = {viewDivStyle}></div>
+    // {webmapLoaded && showListPanel && 
+    // <div className = {styles.rightPanel}>
+    //   <LayerList layers = {webmap.layers}></LayerList>
+    // </div>
+    // }
+    // </div>
   );
   }
 // const Map: FC<MapProps> = () => (
