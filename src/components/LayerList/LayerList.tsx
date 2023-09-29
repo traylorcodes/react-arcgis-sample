@@ -20,22 +20,16 @@ const LayerList: FC<LayerListProps> = (props) => {
       temp.push(
         <ListItem key = {layer.title} layer = {layer}></ListItem>
         );
-      // temp.push(
-      //   <div key = {layer.title} className = {styles.listItemDivs} onClick = {() => {layer.visible = !layer.visible}}>
-      // <p >{layer.title}</p>
-      //   </div>
-
-      // );
     });
     setLayerListItems(temp);
   }, []);
 
   return (
-  // <div className={styles.LayerList}>
   <CalcitePanel heading = "Layers">
+    <div className = {styles.body}>
     {layerListItems}
+    </div>
   </CalcitePanel>
-  // </div>
   );
 };
 
