@@ -2,7 +2,6 @@ import React, { FC, useRef, useState, useEffect } from 'react';
 import styles from './ListItem.module.scss';
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 import {
-  CalciteIcon,
   CalciteLabel,
   CalciteButton
 } from '@esri/calcite-components-react';
@@ -34,7 +33,6 @@ const ListItem: FC<ListItemProps> = (props) => {
 
 return (
   <CalciteLabel layout = 'inline'>
-    {/* <CalciteIcon icon = {icon} onClick = {() => {props.layer.visible = !props.layer.visible}}></CalciteIcon> */}
     { <CalciteButton iconStart = {icon} kind = {'neutral'} onClick = {() => {props.layer.visible = !props.layer.visible}}></CalciteButton>}
     {props.layer.title}
   </CalciteLabel>

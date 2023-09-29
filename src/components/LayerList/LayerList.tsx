@@ -14,7 +14,6 @@ const LayerList: FC<LayerListProps> = (props) => {
   const [layerListItems, setLayerListItems] = useState<Array<any>>([]);
 
   useEffect(() => {
-    // console.log('props:', props);
     const temp: Array<any> = [];
     props.layers.items.forEach((layer: any) => {
       temp.push(

@@ -10,9 +10,11 @@ import "@esri/calcite-components/dist/calcite/calcite.css";
 import { setAssetPath } from "@esri/calcite-components/dist/components";
 setAssetPath("https://js.arcgis.com/calcite-components/1.8.0/assets");
 document.body.classList.toggle('calcite-mode-dark');
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     {/* <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/css/main.css"></link> */}

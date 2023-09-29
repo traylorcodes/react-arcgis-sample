@@ -1,8 +1,7 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import Map from './components/Map/Map';
 import './App.css';
-// import '@esri/calcite-components/dist/calcite/calcite.css';
 
 
 function App() {
