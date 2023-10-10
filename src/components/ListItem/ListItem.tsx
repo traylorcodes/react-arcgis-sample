@@ -1,6 +1,9 @@
-import React, { FC, useRef, useState, useEffect } from 'react';
-import styles from './ListItem.module.scss';
-import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
+import
+// React,
+{ FC, useRef, useState, useEffect } from 'react';
+// import styles from './ListItem.module.scss';
+import { loadModules } from 'esri-loader';
+// import esri = __esri;
 import {
   CalciteLabel,
   CalciteButton
@@ -18,24 +21,33 @@ const ListItem: FC<ListItemProps> = (props) => {
 
   useEffect(() => {
     if (!hasWatchers.current) {
-      reactiveUtils.watch(() => props.layer.visible, (newValue) => {
-        if (newValue === true) {
-          setIcon('view-visible');
-          return;
-        }
-        setIcon('view-hide');
-      });
+
+      loadModules
+        <[
+          typeof __esri.reactiveUtils
+        ]>
+        ([
+          'esri/core/reactiveUtils',
+        ])
+        .then(([reactiveUtils]) => {
+          reactiveUtils.watch(() => props.layer.visible, (newValue: boolean) => {
+            console.log('here');
+            if (newValue === true) {
+              setIcon('view-visible');
+              return;
+            }
+            setIcon('view-hide');
+          });
+        });
       hasWatchers.current = true;
     }
-    }, [])
-    
-    useEffect(() => {}, [icon]);
+  }, [props.layer.visible])
 
-return (
-  <CalciteLabel layout = 'inline'>
-    { <CalciteButton iconStart = {icon} kind = {'neutral'} onClick = {() => {props.layer.visible = !props.layer.visible}}></CalciteButton>}
-    {props.layer.title}
-  </CalciteLabel>
-);
+  return (
+    <CalciteLabel layout='inline'>
+      {<CalciteButton iconStart={icon} kind={'neutral'} onClick={() => { props.layer.visible = !props.layer.visible }}></CalciteButton>}
+      {props.layer.title}
+    </CalciteLabel>
+  );
 }
 export default ListItem;

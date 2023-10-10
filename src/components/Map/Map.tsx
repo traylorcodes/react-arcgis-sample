@@ -1,153 +1,131 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import
+// React,
+{ FC, useEffect, useRef, useState } from 'react';
 import LayerList from '../LayerList/LayerList';
 import styles from './Map.module.scss';
-import MapView from "@arcgis/core/views/MapView.js";
-import WebMap from "@arcgis/core/WebMap.js";
-import Expand from "@arcgis/core/widgets/Expand.js";
-import BasemapGallery from "@arcgis/core/widgets/BasemapGallery.js";
-import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 import "@esri/calcite-components/dist/components/calcite-shell";
 import "@esri/calcite-components/dist/components/calcite-shell-panel";
 import {
   CalciteShellPanel,
   CalciteShell,
-  } from '@esri/calcite-components-react';
+} from '@esri/calcite-components-react';
 import { loadModules } from 'esri-loader';
+// import esri = __esri;
 
 
-interface MapProps {}
+interface MapProps { }
 
 const Map: FC<MapProps> = () => {
-
-  const [webmapLoaded, setWebmapLoaded] = useState<Boolean>(false);
-
   const [showListPanel, setShowListPanel] = useState<Boolean>(false);
-  
-  const [viewDivStyle /* , setViewDivStyle */] = useState<any>(styles.viewDiv);
-
-  const hasWatchers = useRef<Boolean>(false);
-
-  const mapEl = useRef(null);
-
-  // const layers = useRef<any>(null);
   const [layers, setLayers] = useState<any>(null);
+  const mapEl = useRef(null);
+  // const [webmap, setWebmap] = useState<__esri.WebMap>();
+  // const [view, setView] = useState<any>();
+  const modulesLoaded = useRef<Boolean>(false);
 
-// const [webmap /* , setWebmap */] = useState<WebMap>(new WebMap({
-//     portalItem: {
-//       id: '0465bbcbaa9d44e0bce20415174279b1'
-//     },
-//     basemap: 'hybrid'
-//   }));
+  // type BasemapGallery = typeof import('esri/widgets/BasemapGallery');
+  // type Expand = typeof import('esri/widgets/Expand');
+  // type MapView = typeof import('esri/views/MapView');
+  // type reactiveUtils = typeof import('esri/core/reactiveUtils');
+  // type WebMap = typeof import('esri/WebMap');
 
-//   const [view /* , setView */] = useState<MapView>(new MapView({
-//     map: webmap
-//   }));
-
-//   const [layerListExpand, /*setLayerListExpand*/] = useState<Expand>(new Expand({
-//     expandTooltip: 'Layer List',
-//     expandIconClass: 'esri-icon-layer-list',
-//     expanded: false
-//   }));
-
-//   const [basemapExpand, /*setBasemapExpand */] = useState<Expand>(new Expand({
-//     content: new BasemapGallery({view: view}),
-//     expandTooltip: 'Basemaps',
-//     expanded: false
-//   }));
-
-
+  // type MapModules = [
+  //   typeof import ('esri/widgets/BasemapGallery'),
+  //   typeof import('esri/widgets/Expand'),
+  //   typeof import('esri/views/MapView'),
+  //   typeof import('esri/core/reactiveUtils'),
+  //   typeof import ('esri/WebMap'),
+  // ];
 
   useEffect(() => {
-    loadModules([
-      'esri/widgets/BasemapGallery',
-      'esri/widgets/Expand',
-      'esri/views/MapView',
-      'esri/WebMap'
-    ])
-    .then(([BasemapGallery, Expand, MapView, WebMap]) => {
-     const webmap = new WebMap({
+    if (!modulesLoaded.current) {
+
+      loadModules
+        // <[WebMap, MapView, BasemapGallery, Expand, reactiveUtils]>
+        <[
+          typeof __esri.WebMap,
+          typeof __esri.MapView,
+          typeof __esri.BasemapGallery,
+          typeof __esri.Expand,
+          typeof __esri.reactiveUtils
+        ]>
+        ([
+          'esri/WebMap',
+          'esri/views/MapView',
+          'esri/widgets/BasemapGallery',
+          'esri/widgets/Expand',
+          'esri/core/reactiveUtils'
+        ])
+        .then(([WebMap, MapView, BasemapGallery, Expand, reactiveUtils]) => {
+
+          // create the WebMap
+          const webmap: __esri.WebMap = new WebMap({
             portalItem: {
               id: '0465bbcbaa9d44e0bce20415174279b1'
             },
             basemap: 'hybrid'
           });
-    
-    const view = new MapView({
-          map: webmap
+
+          // store the layers once the webmap has loaded
+          webmap.when(() => {
+            setLayers(webmap.layers);
+          });
+
+          // create the MapView
+          const view: __esri.MapView = new MapView({
+            map: webmap,
+            container: mapEl.current ? mapEl.current : undefined
+          });
+
+          // add the UI once the view has loaded
+          view.when(() => {
+            const layerExpand = new Expand({
+              expandTooltip: 'Layer List',
+              expandIconClass: 'esri-icon-layer-list',
+              expanded: false
+            });
+
+            // watch the value of the layer expand's expanded property
+            reactiveUtils.watch(() => layerExpand.expanded, (newValue: boolean) => {
+              setShowListPanel(newValue);
+            });
+
+            view.ui.add(new Expand({
+              content: new BasemapGallery({ view: view }),
+              expandTooltip: 'Basemaps',
+              expanded: false
+            }), 'top-right');
+
+            view.ui.add(layerExpand, 'top-right');
+
+          });
+
+          // store the WebMap and MapView
+          // setWebmap(webmap);
+          // setView(view);
+
+
+          // destroy perhaps?
+          // return () => {
+          //   console.log('destroy');
+          //   webmap.destroy();
+          //   view.destroy();
+          // }
         });
-
-    const layerListExpand = new Expand({
-          expandTooltip: 'Layer List',
-          expandIconClass: 'esri-icon-layer-list',
-          expanded: false
-        });
-
-    const basemapExpand = new Expand({
-          content: new BasemapGallery({view: view}),
-          expandTooltip: 'Basemaps',
-          expanded: false
-        });
-
-      if (mapEl.current && !view.container) {
-        view.container = mapEl.current;
-      }
-
-      webmap.when(() => {
-        setLayers(webmap.layers);
-        // layers.current = webmap.layers;
-        // indicate that the webmap is loaded and the layer list can be created
-        setWebmapLoaded(true);
-      });
-
-      view.when(() => {
-        view.ui.add(layerListExpand,
-          'top-right');
-        view.ui.add(basemapExpand, 'top-right');
-        });
-
-    // watch the expanded property of the layer list expand, open panel if expanded
-    if (hasWatchers.current === false) {
-      reactiveUtils.watch(() => layerListExpand.expanded, (newValue) => {
-        if (newValue) {
-          setShowListPanel(true);
-          return;
-        }
-        setShowListPanel(false);
-      });
-          hasWatchers.current = true;
-      }
-
-
-      });
-  }, []);
-
-  useEffect(() => {
-    // // watch the expanded property of the layer list expand, open panel if expanded
-    // if (hasWatchers.current === false) {
-    //   reactiveUtils.watch(() => layerListExpand.expanded, (newValue) => {
-    //     if (newValue) {
-    //       setShowListPanel(true);
-    //       return;
-    //     }
-    //     setShowListPanel(false);
-    //   });
-    //       hasWatchers.current = true;
-    //   }
+      modulesLoaded.current = true;
+    }
   }, [])
-
-useEffect(() => {}, [webmapLoaded, showListPanel, viewDivStyle, layers])
 
   return (
     <CalciteShell>
-      <CalciteShellPanel slot = "panel-end" collapsed = {!showListPanel}>
-        { 
-        // webmapLoaded &&  <LayerList layers = {webmap.layers}></LayerList>
-        webmapLoaded && <LayerList layers = {layers}></LayerList>
+      <CalciteShellPanel slot="panel-end" collapsed={!showListPanel}>
+        {
+          layers && <LayerList layers={layers}></LayerList>
         }
       </CalciteShellPanel>
-      <div ref = {mapEl} className = {viewDivStyle}></div>
+      <div ref={mapEl} className={styles.viewDiv}></div>
     </CalciteShell>
   );
-  }
+}
 
 export default Map;

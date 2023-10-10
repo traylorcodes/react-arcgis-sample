@@ -1,4 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
+import
+// React,
+{ FC, useEffect, useRef, useState } from 'react';
 import styles from './LayerList.module.scss';
 import ListItem from '../ListItem/ListItem';
 import {
@@ -12,23 +14,27 @@ interface LayerListProps {
 const LayerList: FC<LayerListProps> = (props) => {
 
   const [layerListItems, setLayerListItems] = useState<Array<any>>([]);
+  const listItemsCreated = useRef<boolean>(false);
 
   useEffect(() => {
-    const temp: Array<any> = [];
-    props.layers.items.forEach((layer: any) => {
-      temp.push(
-        <ListItem key = {layer.title} layer = {layer}></ListItem>
+    if (!listItemsCreated.current) {
+      const temp: Array<any> = [];
+      props.layers.items.forEach((layer: any) => {
+        temp.push(
+          <ListItem key={layer.title} layer={layer}></ListItem>
         );
-    });
-    setLayerListItems(temp);
-  }, []);
+      });
+      setLayerListItems(temp);
+      listItemsCreated.current = true;
+    }
+  }, [props.layers.items]);
 
   return (
-  <CalcitePanel heading = "Layers">
-    <div className = {styles.body}>
-    {layerListItems}
-    </div>
-  </CalcitePanel>
+    <CalcitePanel heading="Layers">
+      <div className={styles.body}>
+        {layerListItems}
+      </div>
+    </CalcitePanel>
   );
 };
 
